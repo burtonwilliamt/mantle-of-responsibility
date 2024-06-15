@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://bkpnhbl8w6cny"]
+
+[ext_resource type="Texture2D" uid="uid://dfo62l3onf34c" path="res://earth.png" id="1_d4fgn"]
+[ext_resource type="Script" path="res://earth.gd" id="1_hfnjb"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_hfnjb")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("1_d4fgn")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
