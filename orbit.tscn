@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://8ub3ytnuu1us"]
+
+[ext_resource type="Script" path="res://orbit.gd" id="1_nx5d0"]
+[ext_resource type="PackedScene" uid="uid://b6mmbtrw4gxsp" path="res://orbit_dot.tscn" id="2_hroo5"]
+
+[node name="Orbit" type="Node2D"]
+script = ExtResource("1_nx5d0")
+orbit_dot = ExtResource("2_hroo5")

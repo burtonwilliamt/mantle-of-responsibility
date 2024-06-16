@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6mmbtrw4gxsp"]
+
+[ext_resource type="Texture2D" uid="uid://bkdgil7sfwt4o" path="res://dingbats-368.png" id="1_f8uo7"]
+
+[node name="OrbitDot" type="Sprite2D"]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_f8uo7")
