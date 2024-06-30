@@ -15,8 +15,11 @@ extends Node2D
 # theta, the angle from periapsis to current orbiting body
 @export_range(0, 2*PI) var true_anomaly: float
 
+@export var speedup: float
+
 @export_group("Visuals")
 @export var orbit_dot: PackedScene
+@export var color: Color
 
 
 var gravitational_constant = 6.6743e-11 # Nm^2/kg^2
@@ -28,6 +31,11 @@ var periapsis: float
 var semi_minor_axis: float
 ## The distance from elipse center to the focal point.
 var focal_offset: float
+
+var line: Line2D
+
+var ship: Node2D
+var elapsed_time: float = 0.0
 
 ## Update orbit constants like period and apoapsis.
 func _calculate():
@@ -48,19 +56,12 @@ func _estimate_eccentric_anomaly(mean_anomaly: float) -> float:
 		attempts += 1
 		var approx_mean_anomaly = (E - eccentricity * sin(E))
 		var error =  approx_mean_anomaly - mean_anomaly
-		# print("Current guess: ", E)
-		# print("Calculated as: ", approx_mean_anomaly)
-		# print("Actual:        ", mean_anomaly)
-		# print("Error:         ", error)
 		if absf(error) < _max_error:
-			# print("Success with error: ", error)
-			# print("Took this many attempts: ", attempts)
 			return E
 		if attempts > 100:
 			print("Failed after 100 attempts with error: ", error)
 			return E
 		var deriv = 1 - eccentricity * cos(E)
-		# print("Deriv:         ", deriv)
 		E -= error/deriv
 	return 0.0
 
@@ -68,22 +69,33 @@ func position(t: float) -> Vector2:
 	t = fmod(t, period)
 	var n = 2*PI/period
 	var M = n*t
+	# M = E - sin(E)
 	var E = _estimate_eccentric_anomaly(M)
 	# Maybe this works? I would need to handle something like atan2, and also decide the sign of the sqrt.
 	# The value should at least be in the same half as E.
 	# var theta = 2*atan(sqrt(((1+eccentricity)*(tan(E/2)**2))/(1-eccentricity)))
-	return Vector2(semi_major_axis*cos(E) + focal_offset, semi_minor_axis * sin(E))
+	return Vector2(semi_major_axis*cos(E) - focal_offset, semi_minor_axis * sin(E))/1000
 
+func preview():
+	_calculate()
+	if line != null:
+		self.remove_child(line)
+	line = Line2D.new()
+	line.default_color = color
+	line.antialiased = true
+	line.joint_mode = Line2D.LINE_JOINT_ROUND
+	var num_segments = 100
+	var delta = period/(num_segments-1)
+	for i in range(num_segments):
+		line.add_point(position(delta*(i)))
+	self.add_child(line)
+	ship = orbit_dot.instantiate()
+	ship.position = position(0)
+	self.add_child(ship)
 
 func _ready():
-	_calculate()
-	var num_dots = 100
-	var delta = period/num_dots
-	for i in range(num_dots):
-		var dot = orbit_dot.instantiate()	
-		dot.position = position(delta*(i))/1000
-		self.add_child(dot)
-		
+	preview()
 
 func _process(delta):
-	pass
+	elapsed_time += delta * speedup
+	ship.position = position(elapsed_time)
