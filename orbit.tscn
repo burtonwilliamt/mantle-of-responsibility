@@ -5,4 +5,5 @@
 
 [node name="Orbit" type="Node2D"]
 script = ExtResource("1_nx5d0")
+semi_major_axis = 6.771e+06
 orbit_dot = ExtResource("2_hroo5")
