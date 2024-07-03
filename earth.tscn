@@ -1,11 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://bkpnhbl8w6cny"]
+[gd_scene load_steps=5 format=3 uid="uid://bkpnhbl8w6cny"]
 
 [ext_resource type="Texture2D" uid="uid://dfo62l3onf34c" path="res://earth.png" id="1_d4fgn"]
 [ext_resource type="Script" path="res://earth.gd" id="1_hfnjb"]
+[ext_resource type="PackedScene" uid="uid://cqoyhx7gottoy" path="res://hud.tscn" id="2_mxkiy"]
 [ext_resource type="PackedScene" uid="uid://8ub3ytnuu1us" path="res://orbit.tscn" id="3_0fsk2"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_hfnjb")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Hud" parent="CanvasLayer" instance=ExtResource("2_mxkiy")]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.1, 0.1)
